@@ -23,19 +23,21 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
           channel: 'stable'
 
       - name: Generate Android platform folder if missing
         run: |
           if [ ! -d "android" ]; then
-            echo "No android/ folder yet — generating it without touching our lib/ or pubspec.yaml"
+            echo "No android/ folder yet — generating it without touching our lib/, pubspec.yaml, or test/"
             cp pubspec.yaml /tmp/pubspec.yaml.bak
             cp -r lib /tmp/lib.bak
+            [ -d test ] && cp -r test /tmp/test.bak || true
             flutter create --platforms=android --org com.lowpoly --project-name lowpoly .
             cp /tmp/pubspec.yaml.bak pubspec.yaml
             rm -rf lib
             cp -r /tmp/lib.bak lib
+            rm -rf test
+            if [ -d /tmp/test.bak ]; then cp -r /tmp/test.bak test; else mkdir -p test; fi
           fi
 
       - name: Install dependencies
