@@ -1,0 +1,54 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Generate Android platform folder if missing
+        run: |
+          if [ ! -d "android" ]; then
+            echo "No android/ folder yet — generating it without touching our lib/ or pubspec.yaml"
+            cp pubspec.yaml /tmp/pubspec.yaml.bak
+            cp -r lib /tmp/lib.bak
+            flutter create --platforms=android --org com.lowpoly --project-name lowpoly .
+            cp /tmp/pubspec.yaml.bak pubspec.yaml
+            rm -rf lib
+            cp -r /tmp/lib.bak lib
+          fi
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze (non-blocking)
+        run: flutter analyze || true
+
+      - name: Build APK (release)
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lowpoly-release-apk
+          path: mobile/build/app/outputs/flutter-apk/app-release.apk

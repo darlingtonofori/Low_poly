@@ -1,0 +1,17 @@
+# Flutter / Dart
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+mobile/build/
+mobile/android/local.properties
+mobile/android/app/google-services.json
+mobile/ios/Flutter/Flutter.podspec
+
+# Node backend
+backend/node_modules/
+backend/.env
+
+# General
+.DS_Store
+*.log
