@@ -1,11 +1,7 @@
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 /// Central socket connection to your VPS backend.
-///
-/// CHANGE THIS to your actual VPS address (and use wss:// with a domain +
-/// reverse proxy + SSL once you're past local testing — never ship http/ws
-/// unencrypted to real users).
-const String kServerUrl = 'http://YOUR_VPS_IP:3000';
+const String kServerUrl = 'http://169.255.56.63:3001';
 
 class SocketService {
   SocketService._();
