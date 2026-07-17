@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import '../theme/app_theme.dart';
+import '../widgets/pressable_slab.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback onLoggedIn;
@@ -21,9 +23,11 @@ class _LoginScreenState extends State<LoginScreen> {
       widget.onLoggedIn();
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
+          backgroundColor: LowpolyColors.surface,
           content: Text(
             'Google Sign-In not configured yet — use Guest mode below to test.',
+            style: LowpolyTextStyles.body(size: 14),
           ),
         ),
       );
@@ -38,51 +42,75 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Icon(Icons.grid_view_rounded, size: 72, color: Color(0xFF6C63FF)),
-              const SizedBox(height: 16),
-              const Text(
-                'Lowpoly',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                'Simple games. Live 1v1. No fluff.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white60),
-              ),
-              const SizedBox(height: 48),
-              FilledButton.icon(
-                onPressed: _busy ? null : _handleGoogle,
-                icon: const Icon(Icons.login),
-                label: Text(_busy ? 'Signing in...' : 'Continue with Google'),
-                style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
-              ),
-              const SizedBox(height: 24),
-              const Divider(),
-              const SizedBox(height: 8),
-              const Text('Testing without Firebase set up yet?', style: TextStyle(color: Colors.white38, fontSize: 12)),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _guestController,
-                decoration: const InputDecoration(
-                  labelText: 'Guest name',
-                  border: OutlineInputBorder(),
+      body: LowpolyBackground(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    width: 88,
+                    height: 88,
+                    decoration: BoxDecoration(
+                      color: LowpolyColors.primary,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(color: LowpolyColors.primary.withOpacity(0.4), blurRadius: 24, spreadRadius: 2),
+                      ],
+                    ),
+                    child: const Icon(Icons.grid_view_rounded, size: 48, color: Colors.white),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              OutlinedButton(
-                onPressed: _handleGuest,
-                child: const Text('Continue as Guest'),
-              ),
-            ],
+                const SizedBox(height: 20),
+                Text('Lowpoly', textAlign: TextAlign.center, style: LowpolyTextStyles.display(size: 40)),
+                const SizedBox(height: 4),
+                Text(
+                  'Simple games. Live 1v1. No fluff.',
+                  textAlign: TextAlign.center,
+                  style: LowpolyTextStyles.body(size: 14, color: LowpolyColors.textMuted),
+                ),
+                const SizedBox(height: 48),
+                PressableSlab(
+                  faceColor: LowpolyColors.primary,
+                  shadowColor: LowpolyColors.primaryShadow,
+                  onTap: _busy ? null : _handleGoogle,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Center(
+                      child: Text(
+                        _busy ? 'Signing in...' : 'Continue with Google',
+                        style: LowpolyTextStyles.body(size: 16, weight: FontWeight.w800),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 28),
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: Colors.white.withOpacity(0.15))),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text('testing without Firebase?', style: LowpolyTextStyles.body(size: 11, color: LowpolyColors.textMuted)),
+                    ),
+                    Expanded(child: Divider(color: Colors.white.withOpacity(0.15))),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _guestController,
+                  style: LowpolyTextStyles.body(size: 15),
+                  decoration: const InputDecoration(labelText: 'Guest name'),
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton(
+                  onPressed: _handleGuest,
+                  child: const Text('Continue as Guest'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

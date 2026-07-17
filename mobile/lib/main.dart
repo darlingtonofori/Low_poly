@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'services/auth_service.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   runApp(const LowpolyApp());
@@ -15,12 +16,7 @@ class LowpolyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lowpoly',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: const Color(0xFF6C63FF),
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF121212),
-      ),
+      theme: buildLowpolyTheme(),
       home: const AuthGate(),
     );
   }
@@ -56,7 +52,9 @@ class _AuthGateState extends State<AuthGate> {
   Widget build(BuildContext context) {
     if (_loading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: LowpolyBackground(
+          child: Center(child: CircularProgressIndicator(color: LowpolyColors.primary)),
+        ),
       );
     }
     return _loggedIn
